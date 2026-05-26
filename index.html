@@ -108,6 +108,27 @@
             margin-left: 0.25rem;
         }
 
+        .btn-reset-data {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 1rem;
+            padding: 0.4rem 0.6rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+        }
+
+        .btn-reset-data:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.08);
+        }
+
         nav {
             display: flex;
             background: rgba(15, 23, 42, 0.8);
@@ -1053,6 +1074,7 @@
         <div class="header-title-container">
             <h1 class="header-logo">Academia Bíblica</h1>
             <span class="header-subtitle">Versículos de Memorización</span>
+            <button class="btn-reset-data" onclick="resetAllData()" title="Limpiar todos los datos">🔄</button>
         </div>
         <nav>
             <button class="nav-btn active" onclick="switchSection('dashboard')">
@@ -1333,6 +1355,27 @@
             try {
                 localStorage.setItem('biblical_study_progress', JSON.stringify(cardProgress));
             } catch(e) {}
+        }
+
+        function resetAllData() {
+            if (confirm('¿Limpiar todos los datos de progreso? Esta acción no se puede deshacer.')) {
+                try {
+                    localStorage.removeItem('biblical_study_progress');
+                    localStorage.removeItem('bible_match_best_record');
+                } catch(e) {}
+
+                VERSES_DATA.forEach(v => { cardProgress[v.id] = "practicando"; });
+
+                if (currentTab === 'dashboard') {
+                    renderDashboard();
+                } else if (currentTab === 'match') {
+                    startMatchGame();
+                } else if (currentTab === 'scramble') {
+                    loadScrambleVerse();
+                }
+
+                alert('Datos limpiados. App reiniciada.');
+            }
         }
 
         // --- DASHBOARD RENDERER ---
